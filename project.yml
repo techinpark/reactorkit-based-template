@@ -5,6 +5,7 @@ options:
   tabWidth: 4
   bundleIdPrefix: com.tmsae
   createIntermediateGroups: true
+  generateEmptyDirectories: true
   deploymentTarget:
     iOS: '13.0'
   fileGroups:
