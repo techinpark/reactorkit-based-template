@@ -1,0 +1,90 @@
+name: appname 
+options:
+  usesTabs: false
+  indentWidth: 4
+  tabWidth: 4
+  bundleIdPrefix: com.tmsae
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: '13.0'
+  fileGroups:
+  - Sources
+  - Supporting Files
+configs:
+  Development Debug: debug
+  Development Release: release
+  AppStore Debug: debug
+  AppStore Release: release
+configFiles:
+      Development Debug: Supporting Files/Environment/Debug.xcconfig
+      Development Release: Supporting Files/Environment/Release.xcconfig
+      AppStore Debug: Supporting Files/Environment/Debug.xcconfig
+      AppStore Release: Supporting Files/Environment/Release.xcconfig
+scheme: 
+  appname: 
+    build:
+      targets:
+        appname: [run, archive]
+targets:
+  appname:
+    attributes:
+      SystemCapabilities:
+        com.apple.Push:
+          enabled: 1
+    scheme:
+      configVariants:
+        - Development 
+        - AppStore
+    #  testTargets:
+    #     - appnameSwiftTests
+    #     - appnameUITests
+    type: application
+    platform: iOS
+    deploymentTarget: '13.0'
+    settings: 
+      base:
+        INFOPLIST_FILE: Supporting Files/Info.plist
+        FRAMEWORK_SEARCH_PATHS: [$(inherited), $(PROJECT_DIR), $(SRCROOT)]
+        LIBRARY_SEARCH_PATHS: [$(inherited)]
+        DEVELOPMENT_TEAM: 39MSJ7FY3F
+        CODE_SIGN_STYLE: Manual 
+        ENABLE_BITCODE: false 
+        TARGETED_DEVICE_FAMILY: 1
+        DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      configs: 
+        Development:
+          PRODUCT_BUNDLE_IDENTIFIER: "com.tmsaep.appname.beta"
+          CODE_SIGN_IDENTITY: iPhone Developer 
+          PROVISIONING_PROFILE_SPECIFIER: match Development com.tmsaep.appname.beta
+        AppStore: 
+          PRODUCT_BUNDLE_IDENTIFIER: "com.tmsaep.appname"
+          CODE_SIGN_IDENTITY: iPhone Distribution
+          PROVISIONING_PROFILE_SPECIFIER: match AppStore com.tmsaep.appname
+    sources:
+      - Sources
+      - path: 'Supporting Files'
+        type: group
+      - path: 'Resources'
+        type: group
+    postBuildScripts:
+      - path: BuildScripts/GoogleServiceInfoCopy.sh
+        name: GoogleService-Info Copy
+      - path: BuildScripts/FirebaseCrashlytics.sh
+        name: Firebase Crashlytics 
+        inputFiles: 
+          - ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}
+          - $(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)
+# appnameSwiftTests:
+#     platform: iOS
+#     type: bundle.unit-test
+#     sources:
+#       - appnameSwiftTests
+#     dependencies:
+#       - target: appname
+# appnameUITests:
+#     platform: iOS
+#     type: bundle.ui-testing
+#     sources:
+#       - appnameUITests
+#     dependencies:
+#       - target: appname  
